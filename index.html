@@ -270,6 +270,44 @@ body.page-open #page{transform:translateX(0);}
   padding:14px 26px;min-height:44px;
 }
 
+/* ---------- sites list page ---------- */
+#sites-search{
+  width:100%;border:1px solid var(--ink);border-radius:0;background:var(--paper);
+  font-family:inherit;font-size:14px;padding:11px 12px;min-height:44px;
+  margin-bottom:16px;
+}
+#sites-search:focus{outline:2px solid var(--ink);outline-offset:1px;}
+#sites-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+#sites-filters .s-chip{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;
+  padding:8px 12px;border:1px solid var(--ink);min-height:44px;
+  display:flex;align-items:center;gap:6px;
+}
+#sites-filters .s-chip::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--c);}
+#sites-filters .s-chip.active{background:var(--ink);color:#fff;}
+#sites-filters .s-chip.active::before{box-shadow:0 0 0 1px #fff;background:var(--c);}
+#sites-count{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:16px;}
+.sites-list{list-style:none;}
+.sites-item{
+  border-top:1px solid var(--hairline);padding:16px 0;cursor:pointer;
+}
+.sites-item:hover{padding-left:8px;transition:padding .2s var(--ease);}
+.sites-item h3{font-size:15px;font-weight:700;line-height:1.3;margin-bottom:4px;}
+.sites-item .sites-loc{font-size:12px;color:var(--grey);margin-bottom:6px;}
+.sites-item .sites-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.sites-item .sites-tag{
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 7px;border:1px solid var(--c);
+  display:flex;align-items:center;gap:4px;
+}
+.sites-item .sites-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--c);}
+.sites-item .sites-status{
+  display:inline-block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:3px 7px;border:1px solid var(--ink);margin-left:4px;
+}
+.sites-item .sites-status.at-risk{background:var(--ink);color:#fff;}
+.sites-item .sites-status.demolished{color:var(--grey);border-color:var(--grey);text-decoration:line-through;}
+
 /* mission banner (mobile) */
 #banner{display:none;}
 
@@ -344,6 +382,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
 <nav id="nav">
   <p class="mission">A live map of the UK's <strong>overlooked heritage</strong> — the working-class, industrial, diaspora and Traveller places the heritage system leaves behind. <span class="placeholder">⟨mission copy — Rebecca to draft⟩</span></p>
   <ul>
+    <li><a href="#" data-page="sites">All sites<small>Browse and search the archive</small></a></li>
     <li><a href="#" data-page="about">About<small>Incl. the Bridge Park story</small></a></li>
     <li><a href="#" data-page="research">Research<small>Method &amp; references</small></a></li>
     <li><a href="#" data-page="submit">Submit a site<small>Tell us what we've missed</small></a></li>
@@ -649,10 +688,72 @@ const PAGES = {
   <p class="placeholder">⟨Contact email + press line. TBC.⟩</p>`
 };
 const page = document.getElementById('page');
+const pageContent = document.getElementById('page-content');
+
+/* ============ sites list ============ */
+let sitesTagFilter = null;
+function buildSitesPage(){
+  const search = document.getElementById('sites-search');
+  const query = search ? search.value.toLowerCase() : '';
+  let filtered = ENTRIES.filter(e=>{
+    const matchesTag = !sitesTagFilter || e.tags.includes(sitesTagFilter);
+    const matchesSearch = !query || e.name.toLowerCase().includes(query) || e.loc.toLowerCase().includes(query);
+    return matchesTag && matchesSearch;
+  });
+  document.getElementById('sites-count').textContent = filtered.length + ' site' + (filtered.length===1?'':'s');
+  const list = document.getElementById('sites-list');
+  list.innerHTML = filtered.map((e,i)=>{
+    const idx = ENTRIES.indexOf(e);
+    const statusClass = e.status ? e.status.replace(' ','-') : '';
+    return `<li class="sites-item" data-idx="${idx}">
+      <h3>${e.name}</h3>
+      <p class="sites-loc">${e.loc}</p>
+      <div class="sites-tags">
+        ${e.tags.map(t=>`<span class="sites-tag" style="--c:${TAGS[t].color}">${TAGS[t].name}</span>`).join('')}
+        ${e.status ? `<span class="sites-status ${statusClass}">${e.status}</span>` : ''}
+      </div>
+    </li>`;
+  }).join('');
+  list.querySelectorAll('.sites-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      closePage();
+      const idx = parseInt(item.dataset.idx);
+      openEntry(idx);
+      map.setView([ENTRIES[idx].lat, ENTRIES[idx].lng], 13, {animate:true});
+    });
+  });
+}
+function openSitesPage(){
+  sitesTagFilter = null;
+  pageContent.innerHTML = `<p class="eyebrow">Archive</p><h2>All sites</h2>
+    <input type="text" id="sites-search" placeholder="Search by name or location">
+    <div id="sites-filters">
+      ${Object.entries(TAGS).map(([k,v])=>
+        `<button class="s-chip" data-tag="${k}" style="--c:${v.color}">${v.name}</button>`
+      ).join('')}
+    </div>
+    <p id="sites-count"></p>
+    <ul class="sites-list" id="sites-list"></ul>`;
+  document.getElementById('sites-search').addEventListener('input', buildSitesPage);
+  document.querySelectorAll('#sites-filters .s-chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      const tag = chip.dataset.tag;
+      if(sitesTagFilter === tag){ sitesTagFilter = null; }
+      else { sitesTagFilter = tag; }
+      document.querySelectorAll('#sites-filters .s-chip').forEach(c=>c.classList.toggle('active', c.dataset.tag===sitesTagFilter));
+      buildSitesPage();
+    });
+  });
+  buildSitesPage();
+  document.body.classList.add('page-open');
+  page.scrollTop = 0;
+}
+
 document.querySelectorAll('#nav a[data-page]').forEach(a=>{
   a.addEventListener('click',ev=>{
     ev.preventDefault();
-    document.getElementById('page-content').innerHTML = PAGES[a.dataset.page];
+    if(a.dataset.page === 'sites'){ openSitesPage(); return; }
+    pageContent.innerHTML = PAGES[a.dataset.page];
     document.body.classList.add('page-open');
     page.scrollTop = 0;
   });
