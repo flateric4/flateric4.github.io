@@ -427,31 +427,52 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
 <script>
 /* ============ data ============ */
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTA1PlveyJZyHrc90HfpBbyBJu_pBdntzHpUgjr8WhNlC7U1Z-K1U_7LomTLUlRu_yBBsu5M7gxckCH/pub?gid=0&single=true&output=csv';
 const TAGS = {
   wc:{name:'Working-class', color:'#E69F00'},
   ind:{name:'Industrial',   color:'#0072B2'},
   dia:{name:'Diaspora',     color:'#CC79A7'},
   tra:{name:'Traveller',    color:'#009E73'}
 };
-const PH_DESC = 'Sample narrative for prototype purposes only. Final wording to be researched, fact-checked and written by the editorial lead.';
-const ENTRIES = [
- {name:'Bridge Park Complex', loc:'Stonebridge, Brent, London', lat:51.548, lng:-0.265, tags:['dia','wc'], status:'at risk',
-  desc:'The origin of this project — a pioneering Black-led community enterprise centre of the 1980s. '+PH_DESC},
- {name:'Ancoats Mill Workers\u2019 Housing', loc:'Ancoats, Manchester', lat:53.484, lng:-2.226, tags:['ind','wc'], status:'extant', desc:PH_DESC},
- {name:'Moss Side Community Bathhouse', loc:'Moss Side, Manchester', lat:53.451, lng:-2.245, tags:['wc'], status:'at risk', desc:PH_DESC},
- {name:'Cheetham Hill Market Streets', loc:'Cheetham Hill, Manchester', lat:53.505, lng:-2.240, tags:['dia'], status:'extant', desc:PH_DESC},
- {name:'Longsight Stopping Ground', loc:'Longsight, Manchester', lat:53.443, lng:-2.203, tags:['tra'], status:'demolished', desc:PH_DESC},
- {name:'Handsworth Gurdwara Terrace', loc:'Handsworth, Birmingham', lat:52.507, lng:-1.933, tags:['dia'], status:'extant', desc:PH_DESC},
- {name:'Court Back-to-Backs', loc:'Digbeth, Birmingham', lat:52.475, lng:-1.882, tags:['wc'], status:'at risk', desc:PH_DESC},
- {name:'Saltley Gas Works Cottages', loc:'Saltley, Birmingham', lat:52.494, lng:-1.845, tags:['ind','wc'], status:'demolished', desc:PH_DESC},
- {name:'Becontree Shopping Parade', loc:'Becontree Estate, Dagenham', lat:51.554, lng:0.129, tags:['wc'], status:'extant', desc:PH_DESC},
- {name:'Beckton Gas Works Village', loc:'Beckton, East London', lat:51.516, lng:0.055, tags:['ind'], status:'demolished', desc:PH_DESC},
- {name:'Westway Traveller Site', loc:'North Kensington, London', lat:51.520, lng:-0.212, tags:['tra'], status:'extant', desc:PH_DESC},
- {name:'Govan Drawing Offices', loc:'Govan, Glasgow', lat:55.864, lng:-4.312, tags:['ind','wc'], status:'at risk', desc:PH_DESC},
- {name:'Butetown Seafarers\u2019 Boarding Houses', loc:'Butetown, Cardiff', lat:51.465, lng:-3.166, tags:['dia'], status:'demolished', desc:PH_DESC},
- {name:'Appleby Fair Grounds', loc:'Appleby-in-Westmorland, Cumbria', lat:54.577, lng:-2.487, tags:['tra'], status:'extant', desc:PH_DESC},
- {name:'Holbeck Working Men\u2019s Institute', loc:'Holbeck, Leeds', lat:53.786, lng:-1.560, tags:['wc'], status:'extant', desc:PH_DESC}
-];
+let ENTRIES = [];
+
+function parseCSV(text){
+  const lines = text.split('\n').filter(l=>l.trim());
+  const headers = lines[0].split(',').map(h=>h.trim().toLowerCase());
+  return lines.slice(1).map(line=>{
+    const cols = [];
+    let current = '', inQuotes = false;
+    for(let i=0;i<line.length;i++){
+      if(line[i]==='"'){ inQuotes=!inQuotes; }
+      else if(line[i]===','&&!inQuotes){ cols.push(current.trim()); current=''; }
+      else { current+=line[i]; }
+    }
+    cols.push(current.trim());
+    const row = {};
+    headers.forEach((h,i)=>{ row[h]=cols[i]||''; });
+    return row;
+  });
+}
+
+async function loadEntries(){
+  const res = await fetch(SHEET_CSV);
+  const text = await res.text();
+  const rows = parseCSV(text);
+  ENTRIES = rows
+    .filter(r=>r.published!=='no' && r.lat && r.lng)
+    .map(r=>({
+      name: r.name,
+      loc: r.location,
+      lat: parseFloat(r.lat),
+      lng: parseFloat(r.lng),
+      tags: r.tags.split(',').map(t=>t.trim()).filter(t=>TAGS[t]),
+      desc: r.description,
+      refs: r.references,
+      status: r.status,
+      photo: r.photo
+    }));
+  buildMarkers();
+}
 
 /* ============ map ============ */
 const map = L.map('map',{
@@ -477,19 +498,25 @@ const cluster = L.markerClusterGroup({
 map.addLayer(cluster);
 
 const markers = [];
-ENTRIES.forEach((e,i)=>{
-  const color = TAGS[e.tags[0]].color;
-  const m = L.marker([e.lat,e.lng],{
-    icon: L.divIcon({
-      html:`<div class="dot" style="background:${color}"></div>`,
-      className:'', iconSize:[14,14], iconAnchor:[7,7]
-    })
+function buildMarkers(){
+  markers.length = 0;
+  cluster.clearLayers();
+  ENTRIES.forEach((e,i)=>{
+    if(!e.tags.length) return;
+    const color = TAGS[e.tags[0]].color;
+    const m = L.marker([e.lat,e.lng],{
+      icon: L.divIcon({
+        html:`<div class="dot" style="background:${color}"></div>`,
+        className:'', iconSize:[14,14], iconAnchor:[7,7]
+      })
+    });
+    m.bindTooltip(e.name,{className:'tip',direction:'top',offset:[0,-8]});
+    m.on('click',ev=>{ L.DomEvent.stopPropagation(ev); openEntry(i); });
+    m._entry = e;
+    markers.push(m);
   });
-  m.bindTooltip(e.name,{className:'tip',direction:'top',offset:[0,-8]});
-  m.on('click',ev=>{ L.DomEvent.stopPropagation(ev); openEntry(i); });
-  m._entry = e;
-  markers.push(m);
-});
+  refreshMarkers();
+}
 
 function refreshMarkers(){
   cluster.clearLayers();
@@ -499,7 +526,8 @@ function refreshMarkers(){
   });
   document.body.classList.toggle('filtered', active.length < Object.keys(TAGS).length);
 }
-refreshMarkers();
+
+loadEntries();
 
 /* ============ hamburger ============ */
 const burger = document.getElementById('burger');
@@ -557,8 +585,9 @@ function openEntry(i){
   document.getElementById('p-status').className = 'status '+e.status.replace(' ','-');
   document.getElementById('p-tags').innerHTML = e.tags.map(t=>
     `<span class="tag" style="--c:${TAGS[t].color}">${TAGS[t].name} heritage</span>`).join('');
-  document.getElementById('p-refs').innerHTML =
-    '<li>⟨Source 1 — to be added after fact-checking⟩</li><li>⟨Source 2⟩</li>';
+  document.getElementById('p-refs').innerHTML = e.refs
+    ? e.refs.split(';').map(r=>`<li>${r.trim()}</li>`).join('')
+    : '<li class="placeholder">Sources to be added</li>';
   document.body.classList.add('panel-open');
   document.body.classList.remove('sheet-full');
   panel.scrollTop = 0;
