@@ -336,6 +336,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
     top:auto;left:0;right:0;bottom:0;width:100%;min-width:0;max-width:none;
     height:78vh;border-left:none;border-top:1px solid var(--ink);
     transform:translateY(102%);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
   }
   body.panel-open #panel{transform:translateY(calc(100% - 132px));} /* peek */
   body.panel-open.sheet-full #panel{transform:translateY(0);}
@@ -643,6 +644,12 @@ document.getElementById('panel-close').addEventListener('click',closePanel);
 document.getElementById('sheet-handle').addEventListener('click',()=>{
   document.body.classList.toggle('sheet-full');
 });
+/* auto-expand peek sheet when user tries to scroll content */
+panel.addEventListener('touchmove',()=>{
+  if(document.body.classList.contains('panel-open') && !document.body.classList.contains('sheet-full')){
+    document.body.classList.add('sheet-full');
+  }
+},{passive:true});
 map.on('click',closePanel);
 
 /* ============ full entry page ============ */
