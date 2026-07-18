@@ -1,90 +1,83 @@
 # This Place Counts — Team Guide
 
-## What is this?
+Hey team! Here's everything you need to know about how the site works.
 
-An interactive map of the UK's overlooked heritage, live at:
+## The short version
 
-**https://flateric4.github.io**
+The website is a map that reads from a Google Sheet. You edit the Sheet, the website updates itself. That's it — no code, no developer needed.
 
-The map pulls its data from a shared Google Sheet. When you edit the Sheet, the changes appear on the website the next time someone loads the page. No code, no uploading, no waiting for a developer.
-
-
-## Key links
-
-| What | Link |
-|---|---|
-| Live website | https://flateric4.github.io |
-| Google Sheet (edit entries) | https://docs.google.com/spreadsheets/d/1c_jzcPq_0m9RcF7LhUlhn_4vlVfh62h4wQMi6mz3aoQ/edit |
-| GitHub repo (site code) | https://github.com/flateric4/flateric4.github.io |
+**Live website:** https://flateric4.github.io
+**Google Sheet:** https://docs.google.com/spreadsheets/d/1c_jzcPq_0m9RcF7LhUlhn_4vlVfh62h4wQMi6mz3aoQ/edit
+**GitHub repo (you probably won't need this):** https://github.com/flateric4/flateric4.github.io
 
 
-## How to add a new entry
+## Adding a new entry to the map
 
-1. Open the Google Sheet (link above)
-2. Go to the **Live** tab at the bottom
-3. Add a new row at the bottom with these columns:
+1. Open the [Google Sheet](https://docs.google.com/spreadsheets/d/1c_jzcPq_0m9RcF7LhUlhn_4vlVfh62h4wQMi6mz3aoQ/edit)
+2. Make sure you're on the **Live** tab (bottom of the screen)
+3. Fill in a new row at the bottom — here's what goes in each column:
 
-| Column | What to put | Example |
+| Column | What to write | Example |
 |---|---|---|
-| **name** | Name of the site or project | Bridge Park Complex |
-| **lat** | Latitude (decimal) | 51.548 |
-| **lng** | Longitude (decimal) | -0.265 |
-| **location** | Human-readable place name | Stonebridge, Brent, London |
-| **tags** | One or more tag codes, comma-separated | dia,wc |
-| **description** | The entry text | A pioneering Black-led community centre... |
-| **references** | Sources, separated by semicolons | Historic England report; GLA survey 2019 |
-| **status** | One of: extant / at risk / demolished | at risk |
-| **photo** | Filename if a photo has been uploaded | bridge-park.jpg |
-| **published** | yes or no (leave blank to show by default) | yes |
+| **name** | What's the place called? | Bridge Park Complex |
+| **lat** | Latitude (see below for how to find this) | 51.548 |
+| **lng** | Longitude | -0.265 |
+| **location** | Where is it, in plain English? | Stonebridge, Brent, London |
+| **tags** | Which heritage type? Use the codes below | dia,wc |
+| **description** | Tell the story of this place | A pioneering Black-led community centre... |
+| **references** | Your sources, separated by semicolons | Historic England report; GLA survey 2019 |
+| **status** | Is it still there? Use: extant, at risk, or demolished | at risk |
+| **photo** | Photo filename (if we have one — fine to leave blank) | bridge-park.jpg |
+| **published** | Ready to go live? Put yes (or leave blank — it'll show either way) | yes |
 
-4. Save the Sheet (it saves automatically)
-5. Refresh the website — your new entry should appear on the map
+4. The Sheet saves automatically — just refresh the website and your new dot should be on the map!
 
 ### Tag codes
 
-Use these short codes in the **tags** column:
+These go in the **tags** column. You can use more than one, separated by commas (e.g. `ind,wc`). The first one sets the dot colour.
 
-| Code | Meaning | Dot colour |
+| Type this | What it means | Dot colour on the map |
 |---|---|---|
-| wc | Working-class heritage | Orange |
-| ind | Industrial heritage | Blue |
-| dia | Diaspora heritage | Pink |
-| tra | Traveller heritage | Green |
+| `wc` | Working-class heritage | Orange |
+| `ind` | Industrial heritage | Blue |
+| `dia` | Diaspora heritage | Pink |
+| `tra` | Traveller heritage | Green |
 
-An entry can have multiple tags, separated by commas (e.g. `ind,wc`). The first tag determines the dot colour on the map.
+### How to find the latitude and longitude
 
-### Finding latitude and longitude
+Don't worry, this is easy:
 
-1. Go to Google Maps
-2. Right-click (or long-press on mobile) on the location
-3. The lat/lng numbers appear at the top of the menu — click to copy
-4. Paste into the **lat** and **lng** columns (they'll be two numbers separated by a comma — put the first in lat, the second in lng)
-
-
-## How to edit an existing entry
-
-Just change the text in the Sheet. The website will pick up the change on the next page load.
+1. Open [Google Maps](https://maps.google.com)
+2. Find the location and **right-click** on it (or long-press on your phone)
+3. You'll see two numbers at the top of the menu (something like `51.548, -0.265`) — click them to copy
+4. The first number goes in the **lat** column, the second in **lng**
 
 
-## How to hide an entry without deleting it
+## Editing an existing entry
 
-Set the **published** column to `no`. The entry stays in the Sheet but won't appear on the map.
-
-
-## How to add a photo
-
-1. Go to the GitHub repo: https://github.com/flateric4/flateric4.github.io
-2. Click the **images** folder
-3. Click **Add file → Upload files**
-4. Drag in your photo and click **Commit changes**
-5. In the Sheet, put the filename (e.g. `bridge-park.jpg`) in the **photo** column for that entry
-
-Photos are not yet wired up in the current version — this will be connected soon.
+Just open the Sheet and change whatever you need. Next time someone loads the website, they'll see the update.
 
 
-## Important notes
+## Want to hide an entry without losing it?
 
-- **The Sheet is the single source of truth.** Everything on the map comes from the Sheet. If something looks wrong on the site, check the Sheet first.
-- **All content is Rebecca's domain.** Final wording, narrative, and what gets published is her call.
-- **Every entry must be fact-checked and referenced** before it goes live. The project's credibility depends on this.
-- **Don't delete rows** unless you're sure — use the published column to hide entries instead. The Sheet has version history (File → Version history) if anything goes wrong.
+Put `no` in the **published** column. It stays in the Sheet for the record but disappears from the map. Change it back to `yes` whenever you're ready to show it again.
+
+
+## Adding photos
+
+This part uses GitHub, but it's just drag and drop:
+
+1. Go to the [images folder on GitHub](https://github.com/flateric4/flateric4.github.io/tree/main/images)
+2. Click **Add file** then **Upload files**
+3. Drag your photo in and click the green **Commit changes** button
+4. Back in the Sheet, type the filename (e.g. `bridge-park.jpg`) in the **photo** column
+
+(Photos aren't wired up on the site just yet — coming soon!)
+
+
+## A few things to keep in mind
+
+- **The Sheet is everything.** If something looks wrong on the website, the fix is almost certainly in the Sheet.
+- **Rebecca has final say** on all wording, narrative, and what gets published.
+- **Fact-check and reference every entry** before publishing — the project's credibility depends on it.
+- **Prefer hiding over deleting.** If you're unsure about an entry, set published to `no` rather than deleting the row. If something does go wrong, the Sheet keeps version history — go to File, then Version history to roll back.
