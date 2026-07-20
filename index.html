@@ -651,16 +651,19 @@ function setNav(open){
   document.body.classList.toggle('nav-open', open);
   burger.setAttribute('aria-expanded', open);
 }
+const isMobile = matchMedia('(max-width:760px)').matches;
 ['dragstart','click'].forEach(ev=>map.on(ev,()=>setNav(false)));
-let lastZoom = map.getZoom();
-map.on('zoomend',()=>{
-  const z = map.getZoom();
-  if(z < lastZoom) setNav(true);      // zoomed out → show what this site is
-  else if(z > lastZoom) setNav(false); // zoomed in → clear the view
-  lastZoom = z;
-});
+if(!isMobile){
+  let lastZoom = map.getZoom();
+  map.on('zoomend',()=>{
+    const z = map.getZoom();
+    if(z < lastZoom) setNav(true);      // zoomed out → show what this site is
+    else if(z > lastZoom) setNav(false); // zoomed in → clear the view
+    lastZoom = z;
+  });
+}
 /* mobile: start collapsed */
-if(matchMedia('(max-width:760px)').matches){
+if(isMobile){
   document.body.classList.remove('nav-open');
   burger.setAttribute('aria-expanded','false');
 }
