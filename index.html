@@ -15,10 +15,14 @@
   --grey:#6b6b6b;
   --hairline:#e2e2e2;
   --paper:#ffffff;
-  --wc:#E69F00;   /* Working-class */
-  --ind:#0072B2;  /* Industrial */
-  --dia:#CC79A7;  /* Diaspora */
-  --tra:#009E73;  /* Traveller */
+  --wc:#E69F00;      /* Working-class heritage */
+  --mig:#0072B2;     /* Migrant and diasporic heritage */
+  --lgbtq:#CC79A7;   /* LGBTQ+ heritage */
+  --wom:#D55E00;     /* Women's history */
+  --youth:#56B4E9;   /* Youth culture */
+  --health:#009E73;  /* Health and wellbeing */
+  --care:#F0E442;    /* Community care */
+  --soc:#AA4499;     /* Social movements */
   --nav-w:300px;
   --panel-w:38vw;
   --ease:cubic-bezier(.22,.8,.3,1);
@@ -357,7 +361,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
     padding:12px 16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;min-height:44px;
   }
   #filters-toggle::before{content:'';width:10px;height:10px;border-radius:50%;
-    background:conic-gradient(var(--wc) 0 25%,var(--ind) 0 50%,var(--dia) 0 75%,var(--tra) 0);}
+    background:conic-gradient(var(--wc) 0 12.5%,var(--mig) 0 25%,var(--lgbtq) 0 37.5%,var(--wom) 0 50%,var(--youth) 0 62.5%,var(--health) 0 75%,var(--care) 0 87.5%,var(--soc) 0);}
   body.filters-open #filters{flex-wrap:wrap;justify-content:center;}
   body.filters-open #filters-toggle{border-right:1px solid var(--ink);}
 }
@@ -381,7 +385,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
 
 <!-- nav column -->
 <nav id="nav">
-  <p class="mission">A live map of the UK's <strong>overlooked heritage</strong> — the working-class, industrial, diaspora and Traveller places the heritage system leaves behind. <span class="placeholder">⟨mission copy — Rebecca to draft⟩</span></p>
+  <p class="mission">A live map of the UK's <strong>overlooked heritage</strong> — working-class, migrant, LGBTQ+, women's, youth, health, community care and social movement places the heritage system leaves behind. <span class="placeholder">⟨mission copy — Rebecca to draft⟩</span></p>
   <ul>
     <li><a href="#" data-page="sites">All sites<small>Browse and search the archive</small></a></li>
     <li><a href="#" data-page="about">About<small>Incl. the Bridge Park story</small></a></li>
@@ -403,9 +407,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
   <span class="label">Filter&nbsp;/&nbsp;Legend</span>
   <button id="filters-toggle" aria-label="Show filters">Filter</button>
   <button class="chip" data-tag="wc" style="--c:var(--wc)"><span class="swatch"></span>Working-class</button>
-  <button class="chip" data-tag="ind" style="--c:var(--ind)"><span class="swatch"></span>Industrial</button>
-  <button class="chip" data-tag="dia" style="--c:var(--dia)"><span class="swatch"></span>Diaspora</button>
-  <button class="chip" data-tag="tra" style="--c:var(--tra)"><span class="swatch"></span>Traveller</button>
+  <button class="chip" data-tag="mig" style="--c:var(--mig)"><span class="swatch"></span>Migrant &amp; diasporic</button>
+  <button class="chip" data-tag="lgbtq" style="--c:var(--lgbtq)"><span class="swatch"></span>LGBTQ+</button>
+  <button class="chip" data-tag="wom" style="--c:var(--wom)"><span class="swatch"></span>Women's history</button>
+  <button class="chip" data-tag="youth" style="--c:var(--youth)"><span class="swatch"></span>Youth culture</button>
+  <button class="chip" data-tag="health" style="--c:var(--health)"><span class="swatch"></span>Health &amp; wellbeing</button>
+  <button class="chip" data-tag="care" style="--c:var(--care)"><span class="swatch"></span>Community care</button>
+  <button class="chip" data-tag="soc" style="--c:var(--soc)"><span class="swatch"></span>Social movements</button>
   <button id="reset">Reset</button>
 </div>
 
@@ -469,10 +477,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
 /* ============ data ============ */
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTA1PlveyJZyHrc90HfpBbyBJu_pBdntzHpUgjr8WhNlC7U1Z-K1U_7LomTLUlRu_yBBsu5M7gxckCH/pub?gid=0&single=true&output=csv';
 const TAGS = {
-  wc:{name:'Working-class', color:'#E69F00'},
-  ind:{name:'Industrial',   color:'#0072B2'},
-  dia:{name:'Diaspora',     color:'#CC79A7'},
-  tra:{name:'Traveller',    color:'#009E73'}
+  wc:{name:'Working-class heritage', color:'#E69F00'},
+  mig:{name:'Migrant and diasporic heritage', color:'#0072B2'},
+  lgbtq:{name:'LGBTQ+ heritage', color:'#CC79A7'},
+  wom:{name:"Women's history", color:'#D55E00'},
+  youth:{name:'Youth culture', color:'#56B4E9'},
+  health:{name:'Health and wellbeing', color:'#009E73'},
+  care:{name:'Community care', color:'#F0E442'},
+  soc:{name:'Social movements', color:'#AA4499'}
 };
 let ENTRIES = [];
 
@@ -673,7 +685,7 @@ document.getElementById('entry-close').addEventListener('click',closeEntryPage);
 /* ============ static pages ============ */
 const PAGES = {
  about:`<p class="eyebrow">About</p><h2>Whose heritage is being overlooked?</h2>
-  <p>The UK heritage system protects a narrow band of the past. This project archives what it leaves behind — the heritage of working-class communities, diaspora communities, the Traveller community, and industry — and maps it, so patterns can emerge before conclusions are drawn.</p>
+  <p>The UK heritage system protects a narrow band of the past. This project archives what it leaves behind — the heritage of working-class communities, migrant and diasporic communities, LGBTQ+ lives, women's history, youth culture, health and wellbeing, community care, and social movements — and maps it, so patterns can emerge before conclusions are drawn.</p>
   <h4>The Bridge Park story</h4>
   <p class="placeholder">⟨Origin story of the project — how the Bridge Park campaign revealed the gaps in statutory heritage protection. Copy by Rebecca.⟩</p>
   <h4>Who we are</h4>

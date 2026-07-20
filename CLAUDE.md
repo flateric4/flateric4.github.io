@@ -42,10 +42,14 @@ These are non-negotiable — Rebecca has final sign-off on all visual decisions.
 **Tag palette** (Okabe-Ito, colour-blind safe):
 | Tag | Slug | Hex |
 |---|---|---|
-| Working-class | `wc` | `#E69F00` |
-| Industrial | `ind` | `#0072B2` |
-| Diaspora | `dia` | `#CC79A7` |
-| Traveller | `tra` | `#009E73` |
+| Working-class heritage | `wc` | `#E69F00` |
+| Migrant and diasporic heritage | `mig` | `#0072B2` |
+| LGBTQ+ heritage | `lgbtq` | `#CC79A7` |
+| Women's history | `wom` | `#D55E00` |
+| Youth culture | `youth` | `#56B4E9` |
+| Health and wellbeing | `health` | `#009E73` |
+| Community care | `care` | `#F0E442` |
+| Social movements | `soc` | `#AA4499` |
 
 **Typography:** Space Grotesk only. Hierarchy via size and weight — no italic for emphasis, no colour for emphasis. Uppercase + letterspacing for labels. Reading text: 15px min, 1.6 line height, max ~52ch.
 
@@ -64,7 +68,7 @@ These are non-negotiable — Rebecca has final sign-off on all visual decisions.
 | `name` | text |
 | `lat`, `lng` | decimal |
 | `location` | text (human-readable) |
-| `tags` | comma-separated slugs: `wc`, `ind`, `dia`, `tra` |
+| `tags` | comma-separated slugs: `wc`, `mig`, `lgbtq`, `wom`, `youth`, `health`, `care`, `soc` |
 | `description` | text |
 | `references` | semicolon-separated |
 | `status` | `extant` / `at risk` / `demolished` |
