@@ -67,6 +67,13 @@ a{color:inherit;}
   padding:4px 8px;box-shadow:none;
 }
 .tip::before{border-top-color:var(--ink) !important;}
+.pin-label{
+  background:none;border:none;box-shadow:none;
+  font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.04em;color:var(--ink);
+  white-space:nowrap;padding:0;
+}
+.pin-label::before{display:none;}
 
 /* ---------- wordmark ---------- */
 #wordmark{
@@ -548,6 +555,7 @@ async function loadEntries(){
       photo: r.photo
     }));
   buildMarkers();
+  updateLabels();
 }
 
 /* ============ map ============ */
@@ -566,10 +574,15 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
 const cluster = L.markerClusterGroup({
   maxClusterRadius:44,
   showCoverageOnHover:false,
+  zoomToBoundsOnClick:false,
   iconCreateFunction: c => L.divIcon({
     html:`<div class="cluster" style="width:100%;height:100%">${c.getChildCount()}</div>`,
     className:'', iconSize:[32,32]
   })
+});
+cluster.on('clusterclick', function(ev){
+  const bounds = ev.layer.getBounds().pad(0.2);
+  map.flyToBounds(bounds, {duration:1.2});
 });
 map.addLayer(cluster);
 
@@ -593,6 +606,28 @@ function buildMarkers(){
   });
   refreshMarkers();
 }
+
+/* ============ zoom labels ============ */
+const LABEL_ZOOM = 12;
+const labelLayer = L.layerGroup();
+map.addLayer(labelLayer);
+function updateLabels(){
+  labelLayer.clearLayers();
+  if(map.getZoom() < LABEL_ZOOM) return;
+  markers.forEach(m=>{
+    if(!map.hasLayer(cluster) || !m._entry) return;
+    const e = m._entry;
+    const label = L.marker([e.lat,e.lng],{
+      icon: L.divIcon({
+        html:`<span class="pin-label">${e.name}</span>`,
+        className:'',iconSize:[0,0],iconAnchor:[-10,6]
+      }),
+      interactive:false
+    });
+    labelLayer.addLayer(label);
+  });
+}
+map.on('zoomend',updateLabels);
 
 function refreshMarkers(){
   cluster.clearLayers();
@@ -676,12 +711,13 @@ function openEntry(i){
   document.body.classList.remove('sheet-full');
   panel.scrollTop = 0;
 
-  /* pan so the pin sits in the visible (left) portion on desktop */
+  /* zoom + pan so the pin sits in the visible (left) portion on desktop */
   const desktop = !matchMedia('(max-width:760px)').matches;
-  const target = map.project([e.lat,e.lng], map.getZoom());
+  const zoom = Math.max(map.getZoom(), 15);
+  const target = map.project([e.lat,e.lng], zoom);
   if(desktop){ target.x += panel.offsetWidth/2; }
   else { target.y += 90; }
-  map.panTo(map.unproject(target, map.getZoom()), {animate:true});
+  map.flyTo(map.unproject(target, zoom), zoom, {duration:1.2});
 }
 function closePanel(){ document.body.classList.remove('panel-open','sheet-full','entry-page-open'); }
 document.getElementById('panel-close').addEventListener('click',closePanel);
@@ -778,7 +814,7 @@ function buildSitesPage(){
       closePage();
       const idx = parseInt(item.dataset.idx);
       openEntry(idx);
-      map.setView([ENTRIES[idx].lat, ENTRIES[idx].lng], 13, {animate:true});
+      map.flyTo([ENTRIES[idx].lat, ENTRIES[idx].lng], 15, {duration:1.2});
     });
   });
 }
