@@ -71,7 +71,7 @@ These are non-negotiable — Rebecca has final sign-off on all visual decisions.
 | `tags` | comma-separated slugs: `wc`, `mig`, `lgbtq`, `wom`, `youth`, `health`, `care`, `soc` |
 | `description` | text |
 | `references` | semicolon-separated |
-| `status` | `extant` / `at risk` / `demolished` |
+| `status` | `at risk` / `proposed for redevelopment` / `vacant` / `closed` / `demolished` |
 | `photo` | filename (e.g. `bridge-park.jpg`) |
 | `published` | `yes` / `no` |
 
