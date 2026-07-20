@@ -452,6 +452,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
       <ul id="p-refs" class="placeholder"></ul>
     </div>
     <div class="field"><h3>Status</h3><span class="status" id="p-status"></span></div>
+    <div class="field" id="p-placetype-field" style="display:none"><h3>Place type</h3><p id="p-placetype"></p></div>
+    <div class="field" id="p-recognition-field" style="display:none"><h3>Existing recognition</h3><p id="p-recognition"></p></div>
     <a href="#" id="p-more">Read full entry →</a>
   </div>
 </aside>
@@ -469,6 +471,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
       <div class="cell"><h3>Period</h3><p class="placeholder">⟨e.g. 1972–1988⟩</p></div>
       <div class="cell"><h3>Community</h3><p class="placeholder">⟨whose heritage⟩</p></div>
       <div class="cell"><h3>Status</h3><p id="e-status" style="text-transform:uppercase;font-weight:700;"></p></div>
+      <div class="cell" id="e-placetype-cell" style="display:none"><h3>Place type</h3><p id="e-placetype"></p></div>
+      <div class="cell" id="e-recognition-cell" style="display:none"><h3>Existing recognition</h3><p id="e-recognition"></p></div>
     </div>
     <section><h3>Description</h3>
       <span class="ph-label">Placeholder copy</span>
@@ -539,6 +543,8 @@ async function loadEntries(){
       desc: r.description,
       refs: r.references,
       status: r.status,
+      recognition: r.recognition,
+      placetype: r.placetype,
       photo: r.photo
     }));
   buildMarkers();
@@ -653,6 +659,14 @@ function openEntry(i){
   document.getElementById('p-desc').textContent = e.desc;
   document.getElementById('p-status').textContent = e.status;
   document.getElementById('p-status').className = 'status '+e.status.replace(' ','-');
+  const pPtype = document.getElementById('p-placetype');
+  const pPtypeField = document.getElementById('p-placetype-field');
+  if(e.placetype){ pPtype.textContent = e.placetype; pPtypeField.style.display = ''; }
+  else { pPtypeField.style.display = 'none'; }
+  const pRecog = document.getElementById('p-recognition');
+  const pRecogField = document.getElementById('p-recognition-field');
+  if(e.recognition){ pRecog.textContent = e.recognition; pRecogField.style.display = ''; }
+  else { pRecogField.style.display = 'none'; }
   document.getElementById('p-tags').innerHTML = e.tags.map(t=>
     `<span class="tag" style="--c:${TAGS[t].color}">${TAGS[t].name} heritage</span>`).join('');
   document.getElementById('p-refs').innerHTML = e.refs
@@ -692,6 +706,14 @@ document.getElementById('p-more').addEventListener('click',ev=>{
   document.getElementById('e-loc').textContent = e.loc;
   document.getElementById('e-desc').textContent = e.desc;
   document.getElementById('e-status').textContent = e.status;
+  const ePtype = document.getElementById('e-placetype');
+  const ePtypeCell = document.getElementById('e-placetype-cell');
+  if(e.placetype){ ePtype.textContent = e.placetype; ePtypeCell.style.display = ''; }
+  else { ePtypeCell.style.display = 'none'; }
+  const eRecog = document.getElementById('e-recognition');
+  const eRecogCell = document.getElementById('e-recognition-cell');
+  if(e.recognition){ eRecog.textContent = e.recognition; eRecogCell.style.display = ''; }
+  else { eRecogCell.style.display = 'none'; }
   document.getElementById('e-tags').innerHTML = e.tags.map(t=>
     `<span class="tag" style="--c:${TAGS[t].color}">${TAGS[t].name} heritage</span>`).join('');
   document.body.classList.add('entry-page-open');

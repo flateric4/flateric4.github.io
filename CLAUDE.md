@@ -72,6 +72,8 @@ These are non-negotiable — Rebecca has final sign-off on all visual decisions.
 | `description` | text |
 | `references` | semicolon-separated |
 | `status` | `at risk` / `proposed for redevelopment` / `vacant` / `closed` / `demolished` |
+| `placetype` | free text (e.g. `Community centre`, `Place of worship`, `Public park`) — blank if none |
+| `recognition` | free text (e.g. `Grade II listed`, `Local heritage asset`) — blank if none |
 | `photo` | filename (e.g. `bridge-park.jpg`) |
 | `published` | `yes` / `no` |
 
