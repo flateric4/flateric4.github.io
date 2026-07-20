@@ -65,10 +65,12 @@ Lock in the technical decisions for the production website so the build can proc
 | `name` | text | Entry title |
 | `lat`, `lng` | decimal | Pin position |
 | `location` | text | Human-readable area/address |
-| `tags` | comma-separated slugs | `wc, ind, dia, tra`; first tag colours the dot |
+| `tags` | comma-separated slugs | `wc, mig, lgbtq, wom, youth, health, care, soc`; first tag colours the dot |
 | `description` | text | Rebecca's copy |
+| `placetype` | text | Free text, e.g. `Community centre`, `Place of worship`; blank if none |
+| `recognition` | text | Free text, e.g. `Grade II listed`; blank if none |
 | `references` | semicolon-separated | Displayed as the sources list |
-| `status` | `extant` / `at risk` / `demolished` | Controlled values |
+| `status` | `at risk` / `proposed for redevelopment` / `vacant` / `closed` / `demolished` | Controlled values |
 | `photo` | filename | e.g. `bridge-park.jpg`; blank → standard placeholder |
 | `published` | `yes` / `no` | Lets an entry be drafted in place without appearing |
  

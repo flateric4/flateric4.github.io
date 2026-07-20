@@ -8,7 +8,7 @@
  
 ## 1. Background & Problem Statement
  
-The UK heritage system disproportionately recognises and protects a narrow band of heritage (e.g. Victorian buildings), while the heritage of working-class communities, diaspora communities, the Traveller community (whose heritage is movable and rarely fits statutory designation), and industrial sites is systematically overlooked. There is currently no accessible, well-maintained platform that documents this overlooked heritage in one place.
+The UK heritage system disproportionately recognises and protects a narrow band of heritage (e.g. Victorian buildings), while the heritage of working-class communities, migrant and diasporic communities, LGBTQ+ lives, women's history, youth culture, health and wellbeing, community care, and social movements is systematically overlooked. There is currently no accessible, well-maintained platform that documents this overlooked heritage in one place.
  
 This project grew out of the **Bridge Park project** and asks: *whose heritage is being overlooked, and does the current heritage system reasonably protect our heritage — or is it an echo chamber?*
  
@@ -18,7 +18,7 @@ We are deliberately **not jumping to conclusions**. The purpose at this stage is
  
 1. **Archive** overlooked heritage sites/projects in a structured, consistent database.
 2. **Map** entries visually so geographic patterns (e.g. clustering around urban centres like Manchester and Birmingham) become visible.
-3. **Tag** entries by theme (e.g. working-class heritage, diaspora community heritage, industrial heritage, Traveller heritage) so common themes can be surfaced.
+3. **Tag** entries by theme (Working-class heritage, Migrant and diasporic heritage, LGBTQ+ heritage, Women's history, Youth culture, Health and wellbeing, Community care, Social movements) so common themes can be surfaced.
 4. **Reach two audiences at once:** heritage professionals (English Heritage, practitioners, researchers) *and* everyday people who have never engaged with heritage before — including the disconnected communities whose heritage the project documents.
 5. **Enable future outputs:** long-term (years), the dataset should support analysis and potentially a published book.
 ### Non-goals (for v1)
@@ -47,11 +47,13 @@ Each record has consistent fields (already broadly agreed):
 - Photograph(s)
 - Description / narrative
 - Heritage tags (see 4.3)
+- Place type (free text, e.g. community centre, place of worship)
+- Existing recognition (free text, e.g. Grade II listed — if any)
 - References / sources (essential for credibility)
-- Status (e.g. extant, at risk, demolished)
+- Status (at risk, proposed for redevelopment, vacant, closed, demolished)
 ### 4.3 Tagging system
-- Controlled tag list, e.g. *working-class heritage, diaspora community heritage, industrial heritage, Traveller heritage*.
-- Tags filterable on the map so themes and patterns can be explored.
+- Controlled tag list: *Working-class heritage, Migrant and diasporic heritage, LGBTQ+ heritage, Women's history, Youth culture, Health and wellbeing, Community care, Social movements*.
+- Tags filterable on the map so themes and patterns can be explored. Filter bar displays tags in a 4×2 grid layout.
 ### 4.4 Static pages (simple tab structure)
 - **About** — the project, and the Bridge Park story that spurred it.
 - **Research / References** — methodology and sourcing, for academic credibility.

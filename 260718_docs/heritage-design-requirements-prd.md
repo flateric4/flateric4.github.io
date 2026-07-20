@@ -35,14 +35,18 @@ Tag colours are the **only saturated elements anywhere in the project**. If some
  
 Proposed palette (Okabe–Ito set — colour-blind safe, distinguishable in CMYK print for the book):
  
-| Tag | Hex | |
-|---|---|---|
-| Working-class heritage | `#E69F00` | orange |
-| Industrial heritage | `#0072B2` | blue |
-| Diaspora heritage | `#CC79A7` | pink |
-| Traveller heritage | `#009E73` | green |
- 
-Future tags must be drawn from the remaining Okabe–Ito values (`#56B4E9`, `#D55E00`, `#F0E442`) so the system scales to ~7 tags before it needs rethinking. Where an entry has multiple tags, the **first (primary) tag** colours its dot; all tags appear as chips in the entry panel.
+| Tag | Slug | Hex | |
+|---|---|---|---|
+| Working-class heritage | `wc` | `#E69F00` | orange |
+| Migrant and diasporic heritage | `mig` | `#0072B2` | blue |
+| LGBTQ+ heritage | `lgbtq` | `#CC79A7` | pink |
+| Women's history | `wom` | `#D55E00` | vermillion |
+| Youth culture | `youth` | `#56B4E9` | sky blue |
+| Health and wellbeing | `health` | `#009E73` | green |
+| Community care | `care` | `#F0E442` | yellow |
+| Social movements | `soc` | `#AA4499` | purple |
+
+All eight colours are drawn from the Okabe–Ito set (plus one Paul Tol addition for colour-blind safety). Where an entry has multiple tags, the **first (primary) tag** colours its dot; all tags appear as chips in the entry panel. The filter bar displays all eight tags in a 4×2 grid layout.
  
 ### 3.3 Map
 Base map is fully greyscale (desaturated at source or via filter). Urban/rural contrast must remain legible at national zoom — the grey field is what makes the coloured dots, and therefore the pattern, readable.
@@ -73,7 +77,7 @@ Base map is fully greyscale (desaturated at source or via filter). Urban/rural c
 - No decorative ornament of any kind. If an element does not encode information, it is removed.
 ## 8. Motion
  
-- Motion is functional wayfinding only: panels slide (300–350ms, strong ease-out), the map pans to keep a selected pin visible, filter changes are instant.
+- Motion is functional wayfinding only: panels slide (300–350ms, strong ease-out), map transitions use smooth fly-in animations (1.2s duration) for pin clicks, cluster clicks, and sites list navigation. Filter changes are instant.
 - Nothing animates on its own. No parallax, no scroll effects, no hover flourishes beyond a link's underline or indent.
 - `prefers-reduced-motion` is respected: all transitions collapse to instant.
 ## 9. Accessibility Floor (non-negotiable)
@@ -87,7 +91,7 @@ Base map is fully greyscale (desaturated at source or via filter). Urban/rural c
 Design decisions made now should survive translation to print in several years:
 - The tag palette must hold in CMYK and remain distinguishable in a printed key (Okabe–Ito does).
 - The typographic system (one grotesque, uppercase label voice, hairline rules) is directly reusable as the book's typesetting.
-- Entry field structure (name → tags → location → description → references → status) is the future page template.
+- Entry field structure (name → tags → location → place type → existing recognition → description → references → status) is the future page template.
 ## 11. Do / Don't Summary
  
 | Do | Don't |

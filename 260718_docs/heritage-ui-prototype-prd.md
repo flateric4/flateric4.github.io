@@ -15,7 +15,7 @@ Produce a clickable HTML prototype of the public website UI, good enough to pres
 | Decision | Choice |
 |---|---|
 | Landing experience | **Full-screen map immediately** — the map *is* the homepage; no intro page before it |
-| Opening an entry | **Side panel** slides in next to the map when a pin is clicked; map stays visible and repositions/pans so the selected pin isn't hidden |
+| Opening an entry | **Side panel** slides in next to the map when a pin is clicked; map flies smoothly to zoom 15 and repositions so the selected pin isn't hidden |
 | Tag filtering | **Always-visible filter bar** overlaid on the map |
 | Pin style | **Dots, colour-coded by tag** |
 | Navigation (About / Research / Submit) | **Hamburger menu — open by default on first load, collapsible** by the user |
@@ -28,21 +28,21 @@ Produce a clickable HTML prototype of the public website UI, good enough to pres
 - Colour-coded dots for entries. Colours are the *only* saturated elements on the page; everything else stays black/white/grey so the data carries the visual weight.
 - Dot legend integrated into the filter bar (colour = tag, so filter and legend are the same component — no duplication).
 - Site name/wordmark small and fixed in a corner; geometric, black on white.
-- Hover on a dot (desktop): tooltip with entry name. Click/tap: opens side panel.
-- Clustering behaviour when zoomed out (e.g. numbered cluster circles around Manchester/Birmingham) so dense urban areas stay readable.
+- Hover on a dot (desktop): tooltip with entry name. At zoom level 12+, entry names appear permanently beside their pins. Click/tap: opens side panel with smooth fly-in zoom.
+- Clustering behaviour when zoomed out (e.g. numbered cluster circles around Manchester/Birmingham) so dense urban areas stay readable. Clicking a cluster flies smoothly to its bounds.
 ### 3.2 Hamburger navigation
-- **Open on first load** so first-time visitors immediately see what the site is; collapsible via the hamburger icon and auto-collapses when the user interacts with the map.
+- **Open on first load** (desktop) so first-time visitors immediately see what the site is; collapsible via the hamburger icon and auto-collapses when the user interacts with the map. On desktop, zooming out re-opens the nav; on **mobile, the nav only opens/closes on tap** — zoom does not toggle it.
 - Contains: **About** (incl. Bridge Park origin story), **Research / References**, **Submit a site**, **Contact**.
 - When open, renders as a slim left column over the map — not a full-page takeover.
 - One or two sentences of project mission at the top of the open menu, so the "what is this?" question is answered without leaving the map.
 ### 3.3 Filter bar
 - Always visible, overlaid on the map (bottom or top edge — prototype should test bottom first).
-- One toggle chip per tag: *Working-class · Industrial · Diaspora · Traveller* (+ room for future tags).
+- Eight toggle chips in a 4×2 grid: *Working-class · Migrant & diasporic · LGBTQ+ · Women's history · Youth culture · Health & wellbeing · Community care · Social movements*.
 - Each chip shows its tag colour (doubles as the legend). Toggling a chip shows/hides those dots instantly.
 - "All" state is default; active filters visually obvious; one-tap reset.
 ### 3.4 Entry side panel
 - Slides in from the right (~35–40% of viewport on desktop); map remains interactive.
-- Content order: photograph → entry name → tag chips → location → description → references/sources → status (extant / at risk / demolished).
+- Content order: photograph → entry name → tag chips → location → place type → existing recognition → description → references/sources → status (at risk / proposed for redevelopment / vacant / closed / demolished).
 - Close via ✕, clicking the map, or Esc.
 - Panel is scrollable for longer entries; typography-led, generous white space, geometric rules/dividers — consistent with the Save Bridge Park / Cargo design sensibility.
 ### 3.5 Static pages (About, Research, Submit)
