@@ -133,39 +133,48 @@ body.nav-open #nav{transform:translateX(0);}
   position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
   z-index:25;
   background:var(--paper);border:1px solid var(--ink);
-  display:grid;
-  grid-template-columns:auto repeat(4,auto) auto;
-  max-width:calc(100vw - 32px);
+  display:flex;flex-direction:column;
+  max-width:calc(100vw - 32px);width:auto;
 }
 #filters .label{
   font-size:9px;letter-spacing:.18em;text-transform:uppercase;
   display:flex;align-items:center;padding:0 12px;
   border-right:1px solid var(--ink);color:var(--grey);
-  grid-column:1;grid-row:1 / 3;
 }
+.fbar-group{}
+.fbar-group + .fbar-group{border-top:1px solid var(--hairline);}
+.fbar-group-head{
+  display:flex;align-items:center;gap:8px;width:100%;
+  padding:8px 14px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  font-weight:500;color:var(--grey);min-height:36px;
+}
+.fbar-group-head::after{content:'▸';font-size:10px;margin-left:auto;transition:transform .2s var(--ease);}
+.fbar-group.open .fbar-group-head::after{transform:rotate(90deg);}
+.fbar-group-body{display:none;flex-wrap:wrap;}
+.fbar-group.open .fbar-group-body{display:flex;}
+.fbar-top{display:flex;align-items:stretch;}
+.fbar-top .fbar-groups{flex:1;}
 .chip{
   display:flex;align-items:center;gap:8px;
   padding:12px 16px;font-size:12px;letter-spacing:.04em;font-weight:500;
   border-right:1px solid var(--hairline);
   white-space:nowrap;min-height:44px;
 }
-.chip:nth-of-type(1){grid-column:2;grid-row:1;}
-.chip:nth-of-type(2){grid-column:3;grid-row:1;}
-.chip:nth-of-type(3){grid-column:4;grid-row:1;}
-.chip:nth-of-type(4){grid-column:5;grid-row:1;border-right:none;}
-.chip:nth-of-type(5){grid-column:2;grid-row:2;}
-.chip:nth-of-type(6){grid-column:3;grid-row:2;}
-.chip:nth-of-type(7){grid-column:4;grid-row:2;}
-.chip:nth-of-type(8){grid-column:5;grid-row:2;border-right:none;}
-.chip:nth-of-type(n+5){border-top:1px solid var(--hairline);}
 .chip .swatch{width:11px;height:11px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 1.5px var(--c);}
 .chip.off{color:var(--grey);}
 .chip.off .swatch{background:transparent;}
+.fchip{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 12px;font-size:11px;letter-spacing:.04em;font-weight:500;
+  border-right:1px solid var(--hairline);border-top:1px solid var(--hairline);
+  white-space:nowrap;min-height:40px;
+}
+.fchip.off{color:var(--grey);}
 #reset{
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;
   padding:0 14px;border-left:1px solid var(--ink);
   display:none;align-items:center;background:var(--ink);color:#fff;
-  grid-column:6;grid-row:1 / 3;
+  white-space:nowrap;
 }
 body.filtered #reset{display:flex;}
 #filters-toggle{display:none;}
@@ -302,15 +311,27 @@ body.page-open #page{transform:translateX(0);}
   margin-bottom:16px;
 }
 #sites-search:focus{outline:2px solid var(--ink);outline-offset:1px;}
-#sites-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+#sites-filters{margin-bottom:24px;}
+.sf-group{border-bottom:1px solid var(--hairline);}
+.sf-group:last-child{border-bottom:none;}
+.sf-group-head{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:500;color:var(--grey);min-height:44px;
+}
+.sf-group-head::after{content:'▸';font-size:12px;transition:transform .2s var(--ease);}
+.sf-group.open .sf-group-head::after{transform:rotate(90deg);}
+.sf-group-body{display:none;flex-wrap:wrap;gap:6px;padding-bottom:12px;}
+.sf-group.open .sf-group-body{display:flex;}
 #sites-filters .s-chip{
   font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;
   padding:8px 12px;border:1px solid var(--ink);min-height:44px;
   display:flex;align-items:center;gap:6px;
 }
-#sites-filters .s-chip::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--c);}
+#sites-filters .s-chip.has-swatch::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--c);}
 #sites-filters .s-chip.active{background:var(--ink);color:#fff;}
-#sites-filters .s-chip.active::before{box-shadow:0 0 0 1px #fff;background:var(--c);}
+#sites-filters .s-chip.active.has-swatch::before{box-shadow:0 0 0 1px #fff;background:var(--c);}
+.sf-empty{font-size:12px;color:var(--grey);padding:4px 0;}
 #sites-count{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:16px;}
 .sites-list{list-style:none;}
 .sites-item{
@@ -376,19 +397,20 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
   .photo{aspect-ratio:16/6;}
 
   /* collapsed filter bar */
-  #filters{bottom:12px;display:flex;flex-wrap:wrap;justify-content:center;}
+  #filters{bottom:12px;flex-direction:column;max-width:calc(100vw - 24px);}
   #filters .label{display:none;}
-  .chip:nth-of-type(n+5){border-top:none;}
-  body:not(.filters-open) #filters .chip,
-  body:not(.filters-open) #filters #reset{display:none;}
+  body:not(.filters-open) .fbar-groups,
+  body:not(.filters-open) #reset{display:none;}
   #filters-toggle{
     display:flex;align-items:center;gap:8px;
     padding:12px 16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;min-height:44px;
   }
   #filters-toggle::before{content:'';width:10px;height:10px;border-radius:50%;
     background:conic-gradient(var(--wc) 0 12.5%,var(--mig) 0 25%,var(--lgbtq) 0 37.5%,var(--wom) 0 50%,var(--youth) 0 62.5%,var(--health) 0 75%,var(--care) 0 87.5%,var(--soc) 0);}
-  body.filters-open #filters{flex-wrap:wrap;justify-content:center;}
-  body.filters-open #filters-toggle{border-right:1px solid var(--ink);}
+  body.filters-open #filters-toggle{border-bottom:1px solid var(--ink);}
+  .fbar-top{flex-direction:column;}
+  .fbar-top .fbar-groups{width:100%;}
+  #reset{border-left:none;border-top:1px solid var(--ink);justify-content:center;padding:10px 14px;}
 }
 </style>
 </head>
@@ -428,18 +450,34 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset
 </div>
 
 <!-- filter bar -->
-<div id="filters" role="group" aria-label="Filter by heritage tag">
-  <span class="label">Filter&nbsp;/&nbsp;Legend</span>
+<div id="filters" role="group" aria-label="Filter by category">
   <button id="filters-toggle" aria-label="Show filters">Filter</button>
-  <button class="chip" data-tag="wc" style="--c:var(--wc)"><span class="swatch"></span>Working-class</button>
-  <button class="chip" data-tag="mig" style="--c:var(--mig)"><span class="swatch"></span>Migrant &amp; diasporic</button>
-  <button class="chip" data-tag="lgbtq" style="--c:var(--lgbtq)"><span class="swatch"></span>LGBTQ+</button>
-  <button class="chip" data-tag="wom" style="--c:var(--wom)"><span class="swatch"></span>Women's history</button>
-  <button class="chip" data-tag="youth" style="--c:var(--youth)"><span class="swatch"></span>Youth culture</button>
-  <button class="chip" data-tag="health" style="--c:var(--health)"><span class="swatch"></span>Health &amp; wellbeing</button>
-  <button class="chip" data-tag="care" style="--c:var(--care)"><span class="swatch"></span>Community care</button>
-  <button class="chip" data-tag="soc" style="--c:var(--soc)"><span class="swatch"></span>Social movements</button>
-  <button id="reset">Reset</button>
+  <div class="fbar-top">
+    <div class="fbar-groups">
+      <div class="fbar-group open" data-group="tags">
+        <button class="fbar-group-head">Form of significance</button>
+        <div class="fbar-group-body">
+          <button class="chip" data-tag="wc" style="--c:var(--wc)"><span class="swatch"></span>Working-class</button>
+          <button class="chip" data-tag="mig" style="--c:var(--mig)"><span class="swatch"></span>Migrant &amp; diasporic</button>
+          <button class="chip" data-tag="lgbtq" style="--c:var(--lgbtq)"><span class="swatch"></span>LGBTQ+</button>
+          <button class="chip" data-tag="wom" style="--c:var(--wom)"><span class="swatch"></span>Women's history</button>
+          <button class="chip" data-tag="youth" style="--c:var(--youth)"><span class="swatch"></span>Youth culture</button>
+          <button class="chip" data-tag="health" style="--c:var(--health)"><span class="swatch"></span>Health &amp; wellbeing</button>
+          <button class="chip" data-tag="care" style="--c:var(--care)"><span class="swatch"></span>Community care</button>
+          <button class="chip" data-tag="soc" style="--c:var(--soc)"><span class="swatch"></span>Social movements</button>
+        </div>
+      </div>
+      <div class="fbar-group" data-group="placetype">
+        <button class="fbar-group-head">Place type</button>
+        <div class="fbar-group-body" id="fbar-placetype"></div>
+      </div>
+      <div class="fbar-group" data-group="recognition">
+        <button class="fbar-group-head">Existing recognition</button>
+        <div class="fbar-group-body" id="fbar-recognition"></div>
+      </div>
+    </div>
+    <button id="reset">Reset</button>
+  </div>
 </div>
 
 <!-- entry side panel -->
@@ -556,6 +594,7 @@ async function loadEntries(){
     }));
   buildMarkers();
   updateLabels();
+  buildFilterOptions();
 }
 
 /* ============ map ============ */
@@ -629,13 +668,57 @@ function updateLabels(){
 }
 map.on('zoomend',updateLabels);
 
+let PLACETYPES = [];
+let RECOGNITIONS = [];
+
 function refreshMarkers(){
   cluster.clearLayers();
-  const active = [...document.querySelectorAll('.chip:not(.off)')].map(c=>c.dataset.tag);
+  const activeTags = [...document.querySelectorAll('.chip:not(.off)')].map(c=>c.dataset.tag);
+  const offPT = [...document.querySelectorAll('.fchip[data-pt].off')].map(c=>c.dataset.pt);
+  const offRec = [...document.querySelectorAll('.fchip[data-rec].off')].map(c=>c.dataset.rec);
   markers.forEach(m=>{
-    if(m._entry.tags.some(t=>active.includes(t))) cluster.addLayer(m);
+    const e = m._entry;
+    if(!e.tags.some(t=>activeTags.includes(t))) return;
+    if(offPT.length && e.placetype && offPT.includes(e.placetype)) return;
+    if(offRec.length && e.recognition && offRec.includes(e.recognition)) return;
+    cluster.addLayer(m);
   });
-  document.body.classList.toggle('filtered', active.length < Object.keys(TAGS).length);
+  const totalFilters = Object.keys(TAGS).length + PLACETYPES.length + RECOGNITIONS.length;
+  const activeFilters = activeTags.length + (PLACETYPES.length - offPT.length) + (RECOGNITIONS.length - offRec.length);
+  document.body.classList.toggle('filtered', activeFilters < totalFilters);
+}
+
+function buildFilterOptions(){
+  const ptSet = new Set(), recSet = new Set();
+  ENTRIES.forEach(e=>{
+    if(e.placetype) ptSet.add(e.placetype);
+    if(e.recognition) recSet.add(e.recognition);
+  });
+  PLACETYPES = [...ptSet].sort();
+  RECOGNITIONS = [...recSet].sort();
+  console.log('Filter options:', PLACETYPES.length, 'place types,', RECOGNITIONS.length, 'recognition values');
+
+  const ptContainer = document.getElementById('fbar-placetype');
+  ptContainer.innerHTML = PLACETYPES.map(v=>
+    `<button class="fchip" data-pt="${v}">${v}</button>`
+  ).join('');
+  ptContainer.querySelectorAll('.fchip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      chip.classList.toggle('off');
+      refreshMarkers();
+    });
+  });
+
+  const recContainer = document.getElementById('fbar-recognition');
+  recContainer.innerHTML = RECOGNITIONS.map(v=>
+    `<button class="fchip" data-rec="${v}">${v}</button>`
+  ).join('');
+  recContainer.querySelectorAll('.fchip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      chip.classList.toggle('off');
+      refreshMarkers();
+    });
+  });
 }
 
 loadEntries();
@@ -672,18 +755,23 @@ if(isMobile){
 document.querySelectorAll('.chip').forEach(chip=>{
   chip.addEventListener('click',()=>{
     chip.classList.toggle('off');
-    /* never allow zero tags: if all off, treat as reset */
     if(document.querySelectorAll('.chip:not(.off)').length===0) resetFilters();
     else refreshMarkers();
   });
 });
 function resetFilters(){
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('off'));
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('off'));
   refreshMarkers();
 }
 document.getElementById('reset').addEventListener('click',resetFilters);
 document.getElementById('filters-toggle').addEventListener('click',()=>{
   document.body.classList.toggle('filters-open');
+});
+document.querySelectorAll('.fbar-group-head').forEach(head=>{
+  head.addEventListener('click',()=>{
+    head.parentElement.classList.toggle('open');
+  });
 });
 
 /* ============ entry panel ============ */
@@ -789,14 +877,17 @@ const page = document.getElementById('page');
 const pageContent = document.getElementById('page-content');
 
 /* ============ sites list ============ */
-let sitesTagFilter = null;
+let sitesActiveFilters = {tags:new Set(), placetypes:new Set(), recognitions:new Set()};
 function buildSitesPage(){
   const search = document.getElementById('sites-search');
   const query = search ? search.value.toLowerCase() : '';
+  const af = sitesActiveFilters;
   let filtered = ENTRIES.filter(e=>{
-    const matchesTag = !sitesTagFilter || e.tags.includes(sitesTagFilter);
-    const matchesSearch = !query || e.name.toLowerCase().includes(query) || e.loc.toLowerCase().includes(query);
-    return matchesTag && matchesSearch;
+    if(af.tags.size && !e.tags.some(t=>af.tags.has(t))) return false;
+    if(af.placetypes.size && !af.placetypes.has(e.placetype)) return false;
+    if(af.recognitions.size && !af.recognitions.has(e.recognition)) return false;
+    if(query && !e.name.toLowerCase().includes(query) && !e.loc.toLowerCase().includes(query)) return false;
+    return true;
   });
   document.getElementById('sites-count').textContent = filtered.length + ' site' + (filtered.length===1?'':'s');
   const list = document.getElementById('sites-list');
@@ -821,25 +912,53 @@ function buildSitesPage(){
     });
   });
 }
+function toggleSitesFilter(group, value, chipEl){
+  const set = sitesActiveFilters[group];
+  if(set.has(value)) set.delete(value); else set.add(value);
+  chipEl.classList.toggle('active', set.has(value));
+  buildSitesPage();
+}
 function openSitesPage(){
-  sitesTagFilter = null;
+  sitesActiveFilters = {tags:new Set(), placetypes:new Set(), recognitions:new Set()};
   pageContent.innerHTML = `<p class="eyebrow">Archive</p><h2>All sites</h2>
     <input type="text" id="sites-search" placeholder="Search by name or location">
     <div id="sites-filters">
-      ${Object.entries(TAGS).map(([k,v])=>
-        `<button class="s-chip" data-tag="${k}" style="--c:${v.color}">${v.name}</button>`
-      ).join('')}
+      <div class="sf-group open">
+        <button class="sf-group-head">Form of significance</button>
+        <div class="sf-group-body">
+          ${Object.entries(TAGS).map(([k,v])=>
+            `<button class="s-chip has-swatch" data-group="tags" data-val="${k}" style="--c:${v.color}">${v.name}</button>`
+          ).join('')}
+        </div>
+      </div>
+      <div class="sf-group open">
+        <button class="sf-group-head">Place type</button>
+        <div class="sf-group-body">
+          ${PLACETYPES.length ? PLACETYPES.map(v=>
+            `<button class="s-chip" data-group="placetypes" data-val="${v}">${v}</button>`
+          ).join('') : '<span class="sf-empty">No place types in data</span>'}
+        </div>
+      </div>
+      <div class="sf-group open">
+        <button class="sf-group-head">Existing recognition</button>
+        <div class="sf-group-body">
+          ${RECOGNITIONS.length ? RECOGNITIONS.map(v=>
+            `<button class="s-chip" data-group="recognitions" data-val="${v}">${v}</button>`
+          ).join('') : '<span class="sf-empty">No recognition data</span>'}
+        </div>
+      </div>
     </div>
     <p id="sites-count"></p>
     <ul class="sites-list" id="sites-list"></ul>`;
   document.getElementById('sites-search').addEventListener('input', buildSitesPage);
   document.querySelectorAll('#sites-filters .s-chip').forEach(chip=>{
     chip.addEventListener('click',()=>{
-      const tag = chip.dataset.tag;
-      if(sitesTagFilter === tag){ sitesTagFilter = null; }
-      else { sitesTagFilter = tag; }
-      document.querySelectorAll('#sites-filters .s-chip').forEach(c=>c.classList.toggle('active', c.dataset.tag===sitesTagFilter));
-      buildSitesPage();
+      toggleSitesFilter(chip.dataset.group, chip.dataset.val, chip);
+    });
+  });
+  document.querySelectorAll('.sf-group-head').forEach(head=>{
+    head.addEventListener('click',()=>{
+      head.parentElement.classList.toggle('open');
     });
   });
   buildSitesPage();
